@@ -1,0 +1,31 @@
+[
+
+    {
+        "category_name" : "Criminal",
+        "subcategories" : [
+            {
+                "subcategory_name" : "All"
+            },
+            {
+                "subcategory_name" : "All"
+            },
+            {
+                "subcategory_name" : "All"
+            },
+            {
+                "subcategory_name" : "All"
+            }
+        ]
+    },
+    {
+    "category_name" : "All",
+    "subcategories" : [
+        {
+            "subcategory_name" : "All"
+        },
+        {
+            "subcategory_name" : "All"
+        }
+    ]
+    }
+]
