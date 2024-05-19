@@ -107,4 +107,159 @@ const getMostVoted = async (req, res) => {
   }
 };
 
-export { createPost, getFeedPosts, getPopularPost, getMostVoted };
+const likeUnlike = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const post = await Post.findById(id);
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+    const isLiked = post.likes.includes(req.user._id);
+    let updatedPost;
+    let message;
+    if (isLiked) {
+      updatedPost = await Post.findByIdAndUpdate(
+        id,
+        { $pull: { likes: req.user._id } },
+        { new: true }
+      );
+      message = "post unliked";
+    } else {
+      updatedPost = await Post.findByIdAndUpdate(
+        id,
+        { $push: { likes: req.user._id } },
+        { new: true }
+      );
+      message = "post liked";
+    }
+    const response = {
+      message,
+      ...updatedPost._doc,
+    };
+    res.status(200).json(response);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+    console.log("Error in LikeUnlike :", error.message);
+  }
+};
+
+const replyToPost = async (req, res) => {
+  try {
+    const { text } = req.body;
+    const postId = req.params.id;
+    const userId = req.user._id;
+    const userProfilePic = req.user.profilePic;
+    const username = req.user.username;
+
+    if (!text) {
+      return res.status(400).json({ error: "Please enter text" });
+    }
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+    // if (post.author.toString() === userId.toString()) {
+    //   return res
+    //     .status(401)
+    //     .json({ error: "You cannot reply to your own post" });
+    // }
+
+    const reply = {
+      text,
+      userId,
+      username,
+      userProfilePic,
+    };
+
+    post.replies.push(reply);
+    await post.save();
+
+    res.status(200).json(post);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+    console.log("Error in replyToPost :", error.message);
+  }
+};
+
+const bookmarkPost = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const post = await Post.findById(id);
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+    const isBookmarked = post.bookmarks.includes(req.user._id);
+    let updatedPost;
+    let message;
+    if (isBookmarked) {
+      updatedPost = await Post.findByIdAndUpdate(
+        id,
+        { $pull: { bookmarks: req.user._id } },
+        { new: true }
+      );
+      message = "Post unbookmarked successfully";
+    } else {
+      updatedPost = await Post.findByIdAndUpdate(
+        id,
+        { $push: { bookmarks: req.user._id } },
+        { new: true }
+      );
+      message = "Post bookmarked successfully";
+    }
+
+    // Manually add the message to the response
+    const response = {
+      ...updatedPost._doc, // Spread the post document to include all its properties
+      message, // Add the message
+    };
+
+    res.status(200).json(response);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+    console.log("Error in LikeUnlike :", error.message);
+  }
+};
+
+const getBookmarks = async (req, res) => {
+  try {
+    // find all post that the user have bookmarked
+    const posts = await Post.find({
+      bookmarks: { $in: [req.user._id] },
+    }).sort({ createdAt: -1 });
+    // .populate("author", "username profilePic");
+    res.status(200).json(posts);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+    console.log("Error in get user by id", error);
+  }
+};
+
+const getSearchPosts = async (req, res) => {
+  try {
+    const { query: q } = req.params;
+    const posts = await Post.find({
+      $or: [
+        { title: { $regex: q.toString(), $options: "i" } },
+        { description: { $regex: q.toString(), $options: "i" } },
+      ],
+    });
+    res.status(200).json(posts);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+    console.log("Error in getSearchPosts :", error.message);
+  }
+};
+
+export {
+  createPost,
+  getFeedPosts,
+  getPopularPost,
+  getMostVoted,
+  likeUnlike,
+  replyToPost,
+  bookmarkPost,
+  getBookmarks,
+  getSearchPosts,
+};

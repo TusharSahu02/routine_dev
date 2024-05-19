@@ -99,3 +99,7 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+
+.hideScrollbar::-webkit-scrollbar {
+  display: none;
+}

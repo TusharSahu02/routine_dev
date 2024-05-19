@@ -116,7 +116,7 @@ const getHistory = async (req, res) => {
     res.status(200).json(user);
   } catch (error) {
     res.status(500).json({ error: error.message });
-    console.log("Error in get user by id", error);
+    console.log("Error in get history", error);
   }
 };
 

@@ -1,20 +1,46 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import { Search } from "lucide-react";
 
 import {
   Command,
   CommandEmpty,
-  CommandGroup,
   CommandInput,
   CommandItem,
   CommandList,
-  CommandSeparator,
 } from "@/components/ui/command";
 
 const SearchDialog = () => {
   const [open, setOpen] = useState(false);
-  //   const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [searchResults, setSearchResults] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleSearch = async (q) => {
+    setSearchQuery(q);
+    try {
+      const res = await fetch(`/api/search/${q}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ q }),
+      });
+      const data = await res.json();
+      setSearchResults(data);
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (searchQuery) {
+      handleSearch(searchQuery);
+    }
+  }, [searchQuery]);
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
@@ -28,20 +54,42 @@ const SearchDialog = () => {
       </DialogTrigger>
       <DialogContent className="dark text-white overflow-y-scroll max-h-screen">
         <Command>
-          <CommandInput placeholder="Type a command or search..." />
+          <CommandInput
+            placeholder="Search..."
+            onChange={(<Command>
+              <CommandInput
+                placeholder="Search..."
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              <CommandList>
+                {searchResults.length === 0 && (
+                  <CommandEmpty>No results found.</CommandEmpty>
+                )}
+                {loading ? (
+                  <CommandItem>searching...</CommandItem>
+                ) : (
+                  <>
+                    {searchResults.map((result) => (
+                      <CommandItem key={result.id}>{result.title}</CommandItem>
+                    ))}
+                  </>
+                )}
+              </CommandList>
+            </Command>e) => setSearchQuery(e.target.value)}
+          />
           <CommandList>
-            <CommandEmpty>No results found.</CommandEmpty>
-            <CommandGroup heading="Suggestions">
-              <CommandItem>Calendar</CommandItem>
-              <CommandItem>Search Emoji</CommandItem>
-              <CommandItem>Calculator</CommandItem>
-            </CommandGroup>
-            <CommandSeparator />
-            <CommandGroup heading="Settings">
-              <CommandItem>Profile</CommandItem>
-              <CommandItem>Billing</CommandItem>
-              <CommandItem>Settings</CommandItem>
-            </CommandGroup>
+            {searchResults.length === 0 && (
+              <CommandEmpty>No results found.</CommandEmpty>
+            )}
+            {loading ? (
+              <CommandItem>searching...</CommandItem>
+            ) : (
+              <>
+                {searchResults.map((result) => (
+                  <CommandItem key={result.id}>{result.title}</CommandItem>
+                ))}
+              </>
+            )}
           </CommandList>
         </Command>
       </DialogContent>

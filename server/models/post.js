@@ -31,6 +31,11 @@ const postSchema = new mongoose.Schema(
       default: [],
       ref: "User",
     },
+    bookmarks: {
+      type: [mongoose.Schema.Types.ObjectId],
+      default: [],
+      ref: "User",
+    },
     image: {
       type: String,
     },

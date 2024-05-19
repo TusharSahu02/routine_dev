@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 
+import zod from "zod";
+
 const userSchema = new mongoose.Schema(
   {
     name: {
