@@ -31,6 +31,9 @@ app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 app.use(cookieParser());
 
 // Routes
+app.use("/", (req, res) => {
+  res.send("Site is working fine");
+});
 app.use("/api/users", user);
 app.use("/api/posts", post);
 app.use("/api/urls", url);
