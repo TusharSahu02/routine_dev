@@ -25,7 +25,12 @@ cloudinary.config({
 });
 
 // Middlewares
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://routine-dev.vercel.app",
+    credentials: true,
+  })
+);
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 app.use(cookieParser());
