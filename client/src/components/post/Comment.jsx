@@ -3,10 +3,9 @@ import UserAvatar from "../common/UserAvatar";
 import { ExternalLink } from "lucide-react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
+import { toast } from "sonner";
 
 const Comment = ({ post, user, formatDate, handleComment, text, setText }) => {
-  console.log(post, "comment");
-  console.log(user, "user");
   return (
     <div className=" h-full overflow-y-scroll hideScrollbar">
       <div className="mt-6 rounded-xl overflow-hidden w-full">

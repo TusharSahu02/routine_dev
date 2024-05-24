@@ -37,8 +37,8 @@ const Home = () => {
 
   return (
     // <RoutineLayout>
-    <div className="text-white p-6 lg:p-10">
-      <div className="grid grid-cols-1 2xl:grid-cols-5  xl:grid-cols-4  md:grid-cols-2 gap-6 mb-[80px]">
+    <div className="text-white p-6 lg:p-10 2xl:flex 2xl:items-center 2xl:justify-center">
+      <div className="grid grid-cols-1 2xl:grid-cols-4  xl:grid-cols-3 2xl:w-[2140px]    md:grid-cols-2 gap-6 mb-[80px]">
         {isLoading ? (
           <>
             {Array.from({ length: 4 }).map((_, index) => (

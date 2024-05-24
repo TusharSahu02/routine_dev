@@ -236,9 +236,11 @@ const FeedPost = ({ post }) => {
 
         <div>
           <Sheet>
-            <SheetTrigger>
-              <div className="px-2">
-                <p className="text-xs text-gray-400  mb-3">{formatDate}</p>
+            <SheetTrigger className="w-full">
+              <div className="px-2 ">
+                <p className="text-xs text-start text-gray-400  mb-3">
+                  {formatDate}
+                </p>
               </div>
             </SheetTrigger>
             <SheetContent className="dark   text-white ">
@@ -253,8 +255,8 @@ const FeedPost = ({ post }) => {
             </SheetContent>
           </Sheet>
           <Sheet>
-            <SheetTrigger>
-              <div className="w-full h-[150px] bg-gray-600 rounded-2xl">
+            <SheetTrigger className="w-full">
+              <div className="w-full h-[200px] bg-gray-600 rounded-2xl">
                 {post?.image && (
                   <img
                     src={post?.image}
