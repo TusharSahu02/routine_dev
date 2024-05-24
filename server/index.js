@@ -15,7 +15,6 @@ import { v2 as cloudinary } from "cloudinary";
 
 connectDB();
 const app = express();
-
 const port = process.env.PORT || 5000;
 
 cloudinary.config({
@@ -27,7 +26,7 @@ cloudinary.config({
 // Middlewares
 app.use(
   cors({
-    origin: "https://routine-dev.vercel.app",
+    origin: "http://localhost:3000",
     credentials: true,
   })
 );
@@ -36,7 +35,6 @@ app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 app.use(cookieParser());
 
 // Routes
-
 app.use("/api/users", user);
 app.use("/api/posts", post);
 app.use("/api/urls", url);
